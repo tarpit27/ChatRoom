@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>ChatRoom</title>
+<script>
+	var uri = "ws://localhost:8080/ChatRoom/echo";
+	var ws = new WebSocket(uri);
+	ws.onmessage = function(messageReceived){
+		var messageSpace = document.getElementById("messages");
+		var message = JSON.parse(messageReceived.data);
+		messageSpace.value += message.name + ": " + message.message + "\n";
+                messageSpace.scrollTop = messageSpace.scrollHeight;
+	};
+	function send(){
+		var inputMessage = document.getElementById("message");
+		var jsonMessage = JSON.stringify({"message" : inputMessage.value});
+		ws.send(jsonMessage);
+                inputMessage.value = "";
+	}
+</script>
+</head>
+<body>
+	<div style="text-align: center;">
+		<h2>Chat Room</h2>
+		<textarea rows="10" cols="60"
+			placeholder="messages will appear here.." id="messages" style="letter-spacing: 3px; line-height: 30px;"
+			readonly="readonly"></textarea>
+		<br /> <input type="text" id="message"
+			placeholder="type your messages here.." autofocus="autofocus" />
+                <button onclick="send()">Send</button>
+	</div>
+</body>
+</html>
